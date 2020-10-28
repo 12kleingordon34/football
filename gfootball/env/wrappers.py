@@ -272,10 +272,10 @@ class SingleAgentRewardWrapper(gym.RewardWrapper):
     return reward[0]
 
 
-class CheckpointRewardWrapper(gym.RewardWrapper, custom_rewards=None):
+class CheckpointRewardWrapper(gym.RewardWrapper):
   """A wrapper that adds a dense checkpoint reward."""
 
-  def __init__(self, env, custom_rewards):
+  def __init__(self, env, custom_rewards=None):
     gym.RewardWrapper.__init__(self, env)
     self._collected_checkpoints = {}
     self._num_checkpoints = 10

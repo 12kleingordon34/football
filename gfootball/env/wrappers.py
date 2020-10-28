@@ -295,7 +295,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     self._collected_checkpoints = from_pickle['CheckpointRewardWrapper']
     return from_pickle
 
-  def _possession_reward(obs, weight):
+  def _possession_reward(self, obs, weight):
     if obs['ball_owned_team'] == 0:
         return weight
     elif obs['ball_owned_team'] == 1:
@@ -303,7 +303,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     elif obs['ball_owned_team'] == -1:
         return 0
 
-  def _final_score_reward(obs, weight):
+  def _final_score_reward(self, obs, weight):
     if obs['steps_left'] == 0:
         our_score, opp_score = obs['score']
         score_diff = our_score - opp_score

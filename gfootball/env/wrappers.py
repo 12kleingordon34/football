@@ -275,11 +275,12 @@ class SingleAgentRewardWrapper(gym.RewardWrapper):
 class CheckpointRewardWrapper(gym.RewardWrapper, custom_rewards=None):
   """A wrapper that adds a dense checkpoint reward."""
 
-  def __init__(self, env):
+  def __init__(self, env, custom_rewards):
     gym.RewardWrapper.__init__(self, env)
     self._collected_checkpoints = {}
     self._num_checkpoints = 10
     self._checkpoint_reward = 0.1
+    self.custom_rewards = custom_rewards
 
   def reset(self):
     self._collected_checkpoints = {}
@@ -355,9 +356,9 @@ class CheckpointRewardWrapper(gym.RewardWrapper, custom_rewards=None):
             return -2 * weight
 
 
-    if 'possession_reward' in custom_rewards:
+    if 'possession_reward' in self.custom_rewards:
         reward[rew_index] += self._possession_reward(o, weight=0.1)
-    if 'final_victory_reward' in custom_rewards:
+    if 'final_victory_reward' in self.custom_rewards:
         reward[rew_index] += self._final_score_reward(o, weight=100)
 
     return reward

@@ -313,6 +313,8 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
             return -0.05 * weight
         elif score_diff < 0:
             return -2 * weight
+    else:
+        return 0
 
   def reward(self, reward):
     reward = [reward]

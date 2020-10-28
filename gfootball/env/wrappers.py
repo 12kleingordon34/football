@@ -296,6 +296,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     return from_pickle
 
   def reward(self, reward):
+    reward = [reward]
     observation = self.env.unwrapped.observation()
     if observation is None:
       return reward

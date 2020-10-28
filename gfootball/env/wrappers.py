@@ -380,7 +380,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
 
     if self.verbose:
         print(f'Total Reward: {reward}')
-    return reward
+    return reward[0]
 
 
 class FrameStack(gym.Wrapper):

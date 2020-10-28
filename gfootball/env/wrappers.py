@@ -307,12 +307,12 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     if obs['steps_left'] == 0:
         our_score, opp_score = obs['score']
         score_diff = our_score - opp_score
-    if score_diff > 0:
-        return weight
-    elif score_diff == 0:
-        return -0.05 * weight
-    elif score_diff < 0:
-        return -2 * weight
+        if score_diff > 0:
+            return weight
+        elif score_diff == 0:
+            return -0.05 * weight
+        elif score_diff < 0:
+            return -2 * weight
 
   def reward(self, reward):
     reward = [reward]

@@ -275,12 +275,22 @@ class SingleAgentRewardWrapper(gym.RewardWrapper):
 class CheckpointRewardWrapper(gym.RewardWrapper):
   """A wrapper that adds a dense checkpoint reward."""
 
-  def __init__(self, env, custom_rewards=None):
+  def __init__(
+      self,
+      env,
+      custom_rewards=None,
+      verbose=0,
+      possession_weight=0.05,
+      final_score_weight=100
+  ):
     gym.RewardWrapper.__init__(self, env)
     self._collected_checkpoints = {}
     self._num_checkpoints = 10
     self._checkpoint_reward = 0.1
     self.custom_rewards = custom_rewards
+    self.verbose = verbose
+    self.possession_weight = possession_weight
+    self.final_score_weight = final_score_weight
 
   def reset(self):
     self._collected_checkpoints = {}
@@ -359,13 +369,18 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
       print(f'rew index: {rew_index}')
 
     if 'possession_reward' in self.custom_rewards:
-        print(f'Possession Reward: {self._possession_reward(obs=o, weight=0.05)}')
-        reward[-1] += self._possession_reward(obs=o, weight=0.05)
+        reward_possession = self._possession_reward(obs=o, weight=self.possession_weight)
+        if self.verbose:
+            print(f'Possession Reward: {reward_possession}')
+        reward[-1] += reward_possession
     if 'final_score_reward' in self.custom_rewards:
-        print(f'Final Score Reward: {self._final_score_reward(obs=o, weight=0.05)}')
-        reward[-1] += self._final_score_reward(obs=o, weight=100)
+        reward_final_score = self._final_score_reward(obs=o, weight=self.final_score_weight)
+        if self.verbose:
+            print(f'Final Score Reward: {reward_final_score}')
+        reward[-1] += reward_final_score
 
-    print(f'Total Reward: {reward}')
+    if self.verbose:
+        print(f'Total Reward: {reward}')
     return reward
 
 

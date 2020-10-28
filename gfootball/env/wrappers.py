@@ -356,11 +356,11 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
             self._collected_checkpoints.get(rew_index, 0) + 1)
       print(f'rew index: {rew_index}')
     if 'possession_reward' in self.custom_rewards:
-        reward[rew_index] += self._possession_reward(o, weight=0.05)
-        print(f'Possession Reward: {self._possession_reward(o, weight=0.05)}')
+        reward[rew_index] += self._possession_reward(obs=o, weight=0.05)
+        print(f'Possession Reward: {self._possession_reward(obs=o, weight=0.05)}')
     if 'final_score_reward' in self.custom_rewards:
-        reward[rew_index] += self._final_score_reward(o, weight=100)
-        print(f'Final Score Reward: {self._final_score_reward(o, weight=0.05)}')
+        reward[rew_index] += self._final_score_reward(obs=o, weight=100)
+        print(f'Final Score Reward: {self._final_score_reward(obs=o, weight=0.05)}')
 
     print(f'Total Reward: {reward}')
     return reward

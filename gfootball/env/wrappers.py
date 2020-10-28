@@ -296,6 +296,27 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     return from_pickle
 
   def reward(self, reward):
+    def _possession_reward(obs, weight):
+        if obs['ball_owned_team'] == 0:
+            return weight
+        elif obs['ball_owned_team'] == 1:
+            return -1 * weight
+        elif obs['ball_owned_team'] == -1:
+            return 0
+
+
+    def _final_score_reward(obs, weight):
+        if obs['steps_left'] == 0:
+            our_score, opp_score = obs['score']
+            score_diff = our_score - opp_score
+        if score_diff > 0:
+            return weight
+        elif score_diff == 0:
+            return -0.05 * weight
+        elif score_diff < 0:
+            return -2 * weight
+
+
     reward = [reward]
     observation = self.env.unwrapped.observation()
     if observation is None:
@@ -335,28 +356,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
         reward[rew_index] += self._checkpoint_reward
         self._collected_checkpoints[rew_index] = (
             self._collected_checkpoints.get(rew_index, 0) + 1)
-
-      def _possession_reward(obs, weight):
-          if obs['ball_owned_team'] == 0:
-              return weight
-          elif obs['ball_owned_team'] == 1:
-              return -1 * weight
-          elif obs['ball_owned_team'] == -1:
-              return 0
-
-
-      def _final_score_reward(obs, weight):
-          if obs['steps_left'] == 0:
-              our_score, opp_score = obs['score']
-              score_diff = our_score - opp_score
-          if score_diff > 0:
-              return weight
-          elif score_diff == 0:
-              return -0.05 * weight
-          elif score_diff < 0:
-              return -2 * weight
-
-
+      print(f'rew index: {rew_index}')
       if 'possession_reward' in self.custom_rewards:
           reward[rew_index] += self._possession_reward(o, weight=0.05)
           print(f'Possession Reward: {self._possession_reward(o, weight=0.05)}')

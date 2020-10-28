@@ -366,7 +366,6 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
         reward[rew_index] += self._checkpoint_reward
         self._collected_checkpoints[rew_index] = (
             self._collected_checkpoints.get(rew_index, 0) + 1)
-      print(f'rew index: {rew_index}')
 
     if 'possession_reward' in self.custom_rewards:
         reward_possession = self._possession_reward(obs=o, weight=self.possession_weight)

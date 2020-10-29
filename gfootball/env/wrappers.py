@@ -333,21 +333,24 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
   def _agent_off_pitch_reward(self, obs, weight):
     is_gamemode_normal = (obs['game_mode'] == 0)
     if is_gamemode_normal:
+      print(is_gamemode_normal)
       if obs['ball_owned_team'] == 0:
         x, y = obs['ball']
         if (x >= 1 and y>0.044) or (x >= 1 and y < -0.044):
           return -1 * weight
         # conceed a corner at LHS
-        if (x <= -1 and y > 0.044) or (x <= -1 and y < -0.044):
+        elif (x <= -1 and y > 0.044) or (x <= -1 and y < -0.044):
           return -1 * weight
         # own goal
-        if x <= -1 and (y > -0.044 or y < 0.044):
+        elif x <= -1 and (y > -0.044 or y < 0.044):
           return -100 * weight
         # out of bounds top or bottom
-        if y >= 0.42 or y <= -0.42:
+        elif y >= 0.42 or y <= -0.42:
           return -1 * weight
-        pass
-      pass
+        else:
+          return 0
+      else:
+        return 0
     else:
       return 0
 
@@ -418,7 +421,7 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
         if self.verbose:
             print(f'Agent off pitch Reward: {reward_agent_off_pitch}')
         reward[-1] += reward_agent_off_pitch
-    if '_simple_ball_off_pitch_reward' in self.custom_rewards:
+    if 'simple_ball_off_pitch_reward' in self.custom_rewards:
         reward_simple_ball_op_rew = self._simple_ball_off_pitch_reward(
           obs=o, weight=self.simple_off_pitch_weight
         )

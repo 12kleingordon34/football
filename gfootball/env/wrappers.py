@@ -357,9 +357,16 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
 
   def _simple_ball_off_pitch_reward(self, obs, weight):
     x, y, z = obs['ball']
-    if abs(x) >= 1:
+    if (x >= 1 and y>0.044) or (x >= 1 and y < -0.044):
       return -1 * weight
-    elif abs(y) >= 0.42:
+    # conceed a corner at LHS
+    elif (x <= -1 and y > 0.044) or (x <= -1 and y < -0.044):
+      return -1 * weight
+    # own goal
+    elif x <= -1 and (y > -0.044 or y < 0.044):
+      return -1 * weight
+    # out of bounds top or bottom
+    elif y >= 0.42 or y <= -0.42:
       return -1 * weight
     else:
       return 0

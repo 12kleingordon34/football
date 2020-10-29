@@ -281,7 +281,9 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
       custom_rewards=None,
       verbose=0,
       possession_weight=0.05,
-      final_score_weight=100
+      final_score_weight=100,
+      agent_off_pitch_weight=0.2,
+      simple_off_pitch_weight=0
   ):
     gym.RewardWrapper.__init__(self, env)
     self._collected_checkpoints = {}
@@ -291,6 +293,8 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
     self.verbose = verbose
     self.possession_weight = possession_weight
     self.final_score_weight = final_score_weight
+    self.agent_off_pitch_weight = agent_off_pitch_weight
+    self.simple_off_pitch_weight = simple_off_pitch_weight
 
   def reset(self):
     self._collected_checkpoints = {}
@@ -325,6 +329,36 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
             return -2 * weight
     else:
         return 0
+
+  def _agent_off_pitch_reward(self, obs, weight):
+    is_gamemode_normal = (obs['game_mode'] == 0)
+    if is_gamemode_normal:
+      if obs['ball_owned_team'] == 0:
+        x, y = obs['ball']
+        if (x >= 1 and y>0.044) or (x >= 1 and y < -0.044):
+          return -1 * weight
+        # conceed a corner at LHS
+        if (x <= -1 and y > 0.044) or (x <= -1 and y < -0.044):
+          return -1 * weight
+        # own goal
+        if x <= -1 and (y > -0.044 or y < 0.044):
+          return -100 * weight
+        # out of bounds top or bottom
+        if y >= 0.42 or y <= -0.42:
+          return -1 * weight
+        pass
+      pass
+    else:
+      return 0
+
+  def _simple_ball_off_pitch_reward(self, obs, weight):
+    x, y = obs['ball']
+    if abs(x) >= 1:
+      return -1 * weight
+    elif abs(y) >= 0.42:
+      return -1 * weight
+    else:
+      return 0
 
   def reward(self, reward):
     reward = [reward]
@@ -377,6 +411,20 @@ class CheckpointRewardWrapper(gym.RewardWrapper):
         if self.verbose:
             print(f'Final Score Reward: {reward_final_score}')
         reward[-1] += reward_final_score
+    if 'agent_off_pitch_reward' in self.custom_rewards:
+        reward_agent_off_pitch = self._agent_off_pitch_reward(
+          obs=o, weight=self.agent_off_pitch_weight
+        )
+        if self.verbose:
+            print(f'Agent off pitch Reward: {reward_agent_off_pitch}')
+        reward[-1] += reward_agent_off_pitch
+    if '_simple_ball_off_pitch_reward' in self.custom_rewards:
+        reward_simple_ball_op_rew = self._simple_ball_off_pitch_reward(
+          obs=o, weight=self.simple_off_pitch_weight
+        )
+        if self.verbose:
+            print(f'Simple off pitch Reward: {reward_simple_ball_op_rew}')
+        reward[-1] += reward_simple_ball_op_rew
 
     if self.verbose:
         print(f'Total Reward: {reward}')

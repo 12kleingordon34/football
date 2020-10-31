@@ -115,7 +115,7 @@ class Simple115StateWrapper(gym.ObservationWrapper):
     """Converts an observation into simple115 (or simple115v2) format."""
     return Simple115StateWrapper.convert_observation(observation, self._fixed_positions)
 
-  @staticmethod
+  @staticmethod #
   def convert_observation(observation, fixed_positions):
     """Converts an observation into simple115 (or simple115v2) format.
 

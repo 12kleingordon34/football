@@ -230,7 +230,7 @@ class SMMWrapper(gym.ObservationWrapper):
 
   def __init__(self, env,
                channel_dimensions=(observation_preprocessing.SMM_WIDTH,
-                                   observation_preprocessing.SMM_HEIGHT)):
+                                   observation_preprocessing.SMM_HEIGHT), kernel):
     gym.ObservationWrapper.__init__(self, env)
     self._channel_dimensions = channel_dimensions
     action_shape = np.shape(self.env.action_space)
@@ -242,7 +242,7 @@ class SMMWrapper(gym.ObservationWrapper):
     self.observation_space = gym.spaces.Box(
         low=0, high=255, shape=shape, dtype=np.uint8)
 
-  def observation(self, obs):
+   def observation(self, obs):
     return observation_preprocessing.generate_smm(
         obs, channel_dimensions=self._channel_dimensions,
         config=self.env.unwrapped._config)

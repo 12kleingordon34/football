@@ -87,8 +87,6 @@ def generate_smm(observation, config=None,
           continue
         mark_points(frame[o_i, :, :, index],
                     np.array(o['left_team'][o[layer]]).reshape(-1))
-        print("hello part 1")
       else:
         mark_points(frame[o_i, :, :, index], np.array(o[layer]).reshape(-1))
-        print("hello part 2")
-  return frame
+  return frame, "string"

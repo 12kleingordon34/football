@@ -37,7 +37,7 @@ MINIMAP_NORM_X_MAX = 1.0
 MINIMAP_NORM_Y_MIN = -1.0 / 2.25
 MINIMAP_NORM_Y_MAX = 1.0 / 2.25
 
-_MARKER_VALUE = 255
+_MARKER_VALUE = 1
 
 
 def get_smm_layers(config):
@@ -89,4 +89,4 @@ def generate_smm(observation, config=None,
                     np.array(o['left_team'][o[layer]]).reshape(-1))
       else:
         mark_points(frame[o_i, :, :, index], np.array(o[layer]).reshape(-1))
-  return frame, "string"
+  return frame

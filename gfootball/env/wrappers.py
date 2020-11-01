@@ -230,7 +230,7 @@ class SMMWrapper(gym.ObservationWrapper):
 
   def __init__(self, env,
                channel_dimensions=(observation_preprocessing.SMM_WIDTH,
-                                   observation_preprocessing.SMM_HEIGHT), kernel):
+                                   observation_preprocessing.SMM_HEIGHT)):
     gym.ObservationWrapper.__init__(self, env)
     self._channel_dimensions = channel_dimensions
     action_shape = np.shape(self.env.action_space)

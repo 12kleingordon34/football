@@ -82,6 +82,7 @@ def generate_smm(observation, config=None,
   for o_i, o in enumerate(observation):
     for index, layer in enumerate(get_smm_layers(config)):
       assert layer in o
+      print(layer)
       if layer == 'active':
         if o[layer] == -1:
           continue

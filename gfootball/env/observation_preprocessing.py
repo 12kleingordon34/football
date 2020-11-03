@@ -62,9 +62,8 @@ def mark_points(frame, points):
     frame[y, x] = _MARKER_VALUE
 
 
-def generate_smm(observation, config=None,
-                 channel_dimensions=(SMM_WIDTH, SMM_HEIGHT),
-                 kernel):
+def generate_smm(observation, kernel, config=None,
+                 channel_dimensions=(SMM_WIDTH, SMM_HEIGHT)):
   """Returns a list of minimap observations given the raw features for each
   active player.
 

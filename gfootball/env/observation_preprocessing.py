@@ -24,6 +24,7 @@ from __future__ import print_function
 from gfootball.env import football_action_set
 import numpy as np
 from six.moves import range
+from scipy.signal import convolve2d
 
 
 SMM_WIDTH = 96
@@ -62,7 +63,8 @@ def mark_points(frame, points):
 
 
 def generate_smm(observation, config=None,
-                 channel_dimensions=(SMM_WIDTH, SMM_HEIGHT)):
+                 channel_dimensions=(SMM_WIDTH, SMM_HEIGHT),
+                 kernel):
   """Returns a list of minimap observations given the raw features for each
   active player.
 
@@ -75,7 +77,6 @@ def generate_smm(observation, config=None,
     (N, H, W, C) - shaped np array representing SMM. N stands for the number of
     players we are controlling.
   """
-  print("HELLO")
   frame = np.zeros((len(observation), channel_dimensions[1],
                     channel_dimensions[0], len(get_smm_layers(config))),
                    dtype=np.uint8)
@@ -90,4 +91,9 @@ def generate_smm(observation, config=None,
                     np.array(o['left_team'][o[layer]]).reshape(-1))
       else:
         mark_points(frame[o_i, :, :, index], np.array(o[layer]).reshape(-1))
+
+      frame[o_i,:,:,index] = convolve2d(frame[o_i,:,:,index], kernel) # convolve the (x,y) coords of each timestep and channel
+
   return frame
+
+     

@@ -37,7 +37,7 @@ MINIMAP_NORM_X_MAX = 1.0
 MINIMAP_NORM_Y_MIN = -1.0 / 2.25
 MINIMAP_NORM_Y_MAX = 1.0 / 2.25
 
-_MARKER_VALUE = 1
+_MARKER_VALUE = 255
 
 
 def get_smm_layers(config):
@@ -75,6 +75,7 @@ def generate_smm(observation, config=None,
     (N, H, W, C) - shaped np array representing SMM. N stands for the number of
     players we are controlling.
   """
+  print("HELLO")
   frame = np.zeros((len(observation), channel_dimensions[1],
                     channel_dimensions[0], len(get_smm_layers(config))),
                    dtype=np.uint8)
